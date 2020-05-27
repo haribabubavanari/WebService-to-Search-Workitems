@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="AzureDevOpsService.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TFSServerUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://almexpert.visualstudio.com/</Value>
+    </Setting>
+    <Setting Name="PAT" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">bzjzkmjn5tpkzjkim52bp3khxa5pacdasgogt5u4gfwkezz6piea</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
