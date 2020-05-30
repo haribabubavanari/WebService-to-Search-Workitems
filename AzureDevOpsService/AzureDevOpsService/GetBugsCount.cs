@@ -1,4 +1,4 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.Common;
 using Microsoft.VisualStudio.Services.WebApi;
@@ -23,11 +23,26 @@ namespace AzureDevOpsService
        
         public string GetData(string value)
         {
-            var bugs = QueryOpenBugs(value);
-            return string.Format("Bugs Workitem Count: {0}", bugs.Result.WorkItems.Count());
+            var allBugs = QueryOpenBugs();
+
+            int associatedBugsCount = 0;
+            Uri orgUrl = new Uri(AzureDevOpsService.Properties.Settings.Default.TFSServerUrl);
+            VssConnection connection = new VssConnection(orgUrl, new VssBasicCredential(string.Empty, AzureDevOpsService.Properties.Settings.Default.PAT));
+            WorkItemTrackingHttpClient witClient = connection.GetClient<WorkItemTrackingHttpClient>();
+                        
+            foreach (var item in allBugs.Result.WorkItems)
+            {
+                String _area = witClient.GetWorkItemAsync(item.Id).Result.Fields["System.AreaPath"].ToString();
+                if (_area.Contains(value))
+                {
+                    associatedBugsCount++;
+                }
+            }
+            
+            return string.Format("Bugs Workitem Count: {0}", associatedBugsCount);
         }
 
-        public async Task<WorkItemQueryResult> QueryOpenBugs(string areaPath)
+        public async Task<WorkItemQueryResult> QueryOpenBugs()
         {
 
             Uri orgUrl = new Uri(AzureDevOpsService.Properties.Settings.Default.TFSServerUrl);
@@ -38,12 +53,12 @@ namespace AzureDevOpsService
 
             wiql.Query = "SELECT * "
             + " FROM WorkItems WHERE [System.WorkItemType] in ('Bug')";
-          //  + " AND [System.AreaPath] Under 'TEST254'";
 
-            WorkItemQueryResult bugs = await witClient.QueryByWiqlAsync(wiql);
-            return bugs;
+            WorkItemQueryResult allBugs = await witClient.QueryByWiqlAsync(wiql);
+           
+
+            return allBugs;
             
         }
-
     }
-    }
+}
