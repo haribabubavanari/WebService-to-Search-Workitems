@@ -20,45 +20,33 @@ namespace AzureDevOpsService
     // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "GetBugsCount" in both code and config file together.
     public class GetBugsCount : IGetBugsCount
     {
-       
+
         public string GetData(string value)
         {
-            var allBugs = QueryOpenBugs();
-
-            int associatedBugsCount = 0;
-            Uri orgUrl = new Uri(AzureDevOpsService.Properties.Settings.Default.TFSServerUrl);
-            VssConnection connection = new VssConnection(orgUrl, new VssBasicCredential(string.Empty, AzureDevOpsService.Properties.Settings.Default.PAT));
-            WorkItemTrackingHttpClient witClient = connection.GetClient<WorkItemTrackingHttpClient>();
-                        
-            foreach (var item in allBugs.Result.WorkItems)
-            {
-                String _area = witClient.GetWorkItemAsync(item.Id).Result.Fields["System.AreaPath"].ToString();
-                if (_area.Contains(value))
-                {
-                    associatedBugsCount++;
-                }
-            }
-            
-            return string.Format("Bugs Workitem Count: {0}", associatedBugsCount);
+            var bugs = QueryOpenBugs(value);
+            return string.Format("Bugs Workitem Count: {0}", bugs.Result.WorkItems.Count());
         }
 
-        public async Task<WorkItemQueryResult> QueryOpenBugs()
+        public async Task<WorkItemQueryResult> QueryOpenBugs(string psNumber)
         {
 
             Uri orgUrl = new Uri(AzureDevOpsService.Properties.Settings.Default.TFSServerUrl);
             VssConnection connection = new VssConnection(orgUrl, new VssBasicCredential(string.Empty, AzureDevOpsService.Properties.Settings.Default.PAT));
-           
+
             WorkItemTrackingHttpClient witClient = connection.GetClient<WorkItemTrackingHttpClient>();
             Wiql wiql = new Wiql();
 
+            //Sample areaPath = HSABank\Project1\Test\Test2\PS123456 - Upgrade 12
+            string _searchAreaPath = "HSABank\\Project1\\Test\\Test2\\PS"+ psNumber+" - Upgrade 12";
+
             wiql.Query = "SELECT * "
-            + " FROM WorkItems WHERE [System.WorkItemType] in ('Bug')";
+            + " FROM WorkItems WHERE [System.WorkItemType] in ('Bug')" + 
+            " AND [System.AreaPath] UNDER '" + _searchAreaPath + "'";
 
-            WorkItemQueryResult allBugs = await witClient.QueryByWiqlAsync(wiql);
-           
+            WorkItemQueryResult bugs = await witClient.QueryByWiqlAsync(wiql);
+            return bugs;
 
-            return allBugs;
-            
         }
+
     }
-}
+    }
