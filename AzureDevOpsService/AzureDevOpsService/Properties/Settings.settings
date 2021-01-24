@@ -6,7 +6,7 @@
       <Value Profile="(Default)">https://almexpert.visualstudio.com/</Value>
     </Setting>
     <Setting Name="PAT" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">bzjzkmjn5tpkzjkim52bp3khxa5pacdasgogt5u4gfwkezz6piea</Value>
+      <Value Profile="(Default)">lv2kvi62evy74ik2bn3hdyluvfrp2auwezbf6y6p3bxqmkiesr</Value>
     </Setting>
   </Settings>
 </SettingsFile>

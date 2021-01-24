@@ -34,7 +34,7 @@ namespace AzureDevOpsService.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("bzjzkmjn5tpkzjkim52bp3khxa5pacdasgogt5u4gfwkezz6piea")]
+        [global::System.Configuration.DefaultSettingValueAttribute("lv2kvi62evy74ik2bn3hdyluvfrp2auwezbf6y6p3bxqmkiesr")]
         public string PAT {
             get {
                 return ((string)(this["PAT"]));
